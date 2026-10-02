@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "asics-gel-nimbus",
-      "brand": "ASICS",
-      "name": "Gel-Nimbus",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "asics-gel-cumulus",
       "brand": "ASICS",
       "name": "Gel-Cumulus",
