@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "adidas-adizero-evo-sl",
-      "brand": "Adidas",
-      "name": "Adizero EVO SL",
-      "category": "Running",
-      "price": "R$ 1.099,99",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "adidas-adizero-sl-2",
       "brand": "Adidas",
       "name": "Adizero SL 2",
