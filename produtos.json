@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "nb-fresh-foam-1080",
-      "brand": "New Balance",
-      "name": "Fresh Foam 1080",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "nb-574",
       "brand": "New Balance",
       "name": "574",
