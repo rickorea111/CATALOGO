@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "asics-gel-cumulus",
-      "brand": "ASICS",
-      "name": "Gel-Cumulus",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "nike-pegasus",
       "brand": "Nike",
       "name": "Pegasus",
