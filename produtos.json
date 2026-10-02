@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "adidas-supernova",
-      "brand": "Adidas",
-      "name": "Supernova",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "asics-gel-nimbus",
       "brand": "ASICS",
       "name": "Gel-Nimbus",
