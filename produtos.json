@@ -1,20 +1,157 @@
 {
   "produtos": [
-    { "id": "adidas-adizero-evo-sl", "brand": "Adidas", "name": "Adizero EVO SL", "category": "Running", "price": "R$ 1.099,99", "media": "", "type": "" },
-    { "id": "adidas-adizero-sl-2", "brand": "Adidas", "name": "Adizero SL 2", "category": "Running", "price": "R$ 799,99", "media": "", "type": "" },
-    { "id": "adidas-ultraboost", "brand": "Adidas", "name": "Ultraboost", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "adidas-supernova", "brand": "Adidas", "name": "Supernova", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "asics-novablast", "brand": "ASICS", "name": "Novablast", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "asics-gel-nimbus", "brand": "ASICS", "name": "Gel-Nimbus", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "asics-gel-kayano", "brand": "ASICS", "name": "Gel-Kayano", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "asics-gel-cumulus", "brand": "ASICS", "name": "Gel-Cumulus", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nike-pegasus", "brand": "Nike", "name": "Pegasus", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nike-vomero", "brand": "Nike", "name": "Vomero", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nike-structure", "brand": "Nike", "name": "Structure", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nike-air-max", "brand": "Nike", "name": "Air Max", "category": "Lifestyle", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nb-fresh-foam-1080", "brand": "New Balance", "name": "Fresh Foam 1080", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nb-fresh-foam-880", "brand": "New Balance", "name": "Fresh Foam 880", "category": "Running", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nb-9060", "brand": "New Balance", "name": "9060", "category": "Lifestyle", "price": "Consultar", "media": "", "type": "" },
-    { "id": "nb-574", "brand": "New Balance", "name": "574", "category": "Lifestyle", "price": "Consultar", "media": "", "type": "" }
+    {
+      "id": "adidas-adizero-evo-sl",
+      "brand": "Adidas",
+      "name": "Adizero EVO SL",
+      "category": "Running",
+      "price": "R$ 1.099,99",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "adidas-adizero-sl-2",
+      "brand": "Adidas",
+      "name": "Adizero SL 2",
+      "category": "Running",
+      "price": "R$ 799,99",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "adidas-ultraboost",
+      "brand": "Adidas",
+      "name": "Ultraboost",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "adidas-supernova",
+      "brand": "Adidas",
+      "name": "Supernova",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "asics-novablast",
+      "brand": "ASICS",
+      "name": "Novablast",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "asics-gel-nimbus",
+      "brand": "ASICS",
+      "name": "Gel-Nimbus",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "asics-gel-kayano",
+      "brand": "ASICS",
+      "name": "Gel-Kayano",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "asics-gel-cumulus",
+      "brand": "ASICS",
+      "name": "Gel-Cumulus",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nike-pegasus",
+      "brand": "Nike",
+      "name": "Pegasus",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nike-vomero",
+      "brand": "Nike",
+      "name": "Vomero",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nike-structure",
+      "brand": "Nike",
+      "name": "Structure",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nike-air-max",
+      "brand": "Nike",
+      "name": "Air Max",
+      "category": "Lifestyle",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nb-fresh-foam-1080",
+      "brand": "New Balance",
+      "name": "Fresh Foam 1080",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nb-fresh-foam-880",
+      "brand": "New Balance",
+      "name": "Fresh Foam 880",
+      "category": "Running",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nb-9060",
+      "brand": "New Balance",
+      "name": "9060",
+      "category": "Lifestyle",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "nb-574",
+      "brand": "New Balance",
+      "name": "574",
+      "category": "Lifestyle",
+      "price": "Consultar",
+      "media": "",
+      "type": ""
+    },
+    {
+      "id": "on-cloud-top2-muqwl7gj",
+      "brand": "ON CLOUD",
+      "name": "TOP2",
+      "category": "Running",
+      "price": "150.00",
+      "media": "fotos/on-cloud-top2-muqwl47x.mp4",
+      "type": "video"
+    }
   ]
 }
