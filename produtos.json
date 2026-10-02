@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "adidas-adizero-sl-2",
-      "brand": "Adidas",
-      "name": "Adizero SL 2",
-      "category": "Running",
-      "price": "R$ 799,99",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "adidas-supernova",
       "brand": "Adidas",
       "name": "Supernova",
