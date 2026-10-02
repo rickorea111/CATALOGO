@@ -23,8 +23,6 @@ header p { margin-top: 8px; color: #bbb; }
 .product-image img, .product-image video { width: 100%; height: 100%; object-fit: cover; }
 .shoe-placeholder { font-size: 70px; }
 .brand-tag { position: absolute; top: 12px; left: 12px; background: #111; color: #fff; padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; }
-.add-media { position: absolute; bottom: 10px; right: 10px; background: #fff; border: 1px solid #ccc; border-radius: 20px; padding: 7px 12px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 2; }
-.add-media:hover { background: #111; color: #fff; }
 .product-info { padding: 17px; }
 .product-brand { color: #777; font-size: 12px; text-transform: uppercase; margin-bottom: 6px; }
 .product-name { font-size: 18px; font-weight: bold; }
@@ -34,8 +32,9 @@ header p { margin-top: 8px; color: #bbb; }
 .modal-box { background: #fff; max-width: 850px; margin: 30px auto; border-radius: 20px; overflow: hidden; position: relative; }
 .close { position: absolute; right: 18px; top: 14px; width: 40px; height: 40px; border: none; border-radius: 50%; background: #111; color: #fff; font-size: 22px; cursor: pointer; z-index: 5; }
 .modal-content { display: grid; grid-template-columns: 1fr 1fr; }
-.modal-image { min-height: 430px; background: linear-gradient(135deg, #eee, #d7d7d7); display: flex; align-items: center; justify-content: center; font-size: 120px; }
+.modal-image { min-height: 430px; background: linear-gradient(135deg, #eee, #d7d7d7); display: flex; align-items: center; justify-content: center; }
 .modal-image img, .modal-image video { width: 100%; height: 100%; max-height: 520px; object-fit: contain; }
+.modal-image .shoe-placeholder { font-size: 120px; }
 .modal-info { padding: 45px 35px; }
 .modal-brand { color: #777; text-transform: uppercase; font-size: 13px; margin-bottom: 10px; }
 .modal-title { font-size: 34px; margin-bottom: 15px; }
@@ -43,9 +42,6 @@ header p { margin-top: 8px; color: #bbb; }
 .modal-price { font-size: 28px; font-weight: bold; margin-bottom: 25px; }
 .info-box { background: #f5f5f5; padding: 15px; border-radius: 12px; margin-top: 15px; }
 .info-box strong { display: block; margin-bottom: 6px; }
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-.btn { border: 1px solid #111; background: #111; color: #fff; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 14px; }
-.btn.light { background: #fff; color: #111; }
 footer { text-align: center; padding: 40px 20px; color: #777; }
 .no-results { text-align: center; padding: 50px; color: #777; display: none; }
 @media (max-width: 900px) { .products { grid-template-columns: repeat(3, 1fr); } }
@@ -71,13 +67,7 @@ footer { text-align: center; padding: 40px 20px; color: #777; }
 
 <main class="container">
   <input type="text" id="search" class="search" placeholder="🔎 Pesquisar modelo ou marca...">
-  <div class="brands">
-    <button class="brand-btn active" onclick="filterBrand('Todos', this)">Todos</button>
-    <button class="brand-btn" onclick="filterBrand('Adidas', this)">Adidas</button>
-    <button class="brand-btn" onclick="filterBrand('ASICS', this)">ASICS</button>
-    <button class="brand-btn" onclick="filterBrand('Nike', this)">Nike</button>
-    <button class="brand-btn" onclick="filterBrand('New Balance', this)">New Balance</button>
-  </div>
+  <div id="brands" class="brands"></div>
   <div id="products" class="products"></div>
   <div id="noResults" class="no-results">Nenhum tênis encontrado.</div>
 </main>
@@ -86,7 +76,7 @@ footer { text-align: center; padding: 40px 20px; color: #777; }
   <div class="modal-box">
     <button class="close" onclick="closeModal()">×</button>
     <div class="modal-content">
-      <div id="modalImage" class="modal-image">👟</div>
+      <div id="modalImage" class="modal-image"></div>
       <div class="modal-info">
         <div id="modalBrand" class="modal-brand"></div>
         <h2 id="modalTitle" class="modal-title"></h2>
@@ -94,127 +84,56 @@ footer { text-align: center; padding: 40px 20px; color: #777; }
         <div id="modalPrice" class="modal-price"></div>
         <div class="info-box"><strong>Modelo</strong><span id="modalModel"></span></div>
         <div class="info-box"><strong>Disponibilidade</strong>Consulte a disponibilidade.</div>
-        <div class="modal-actions">
-          <button class="btn" onclick="pickFile(currentProduct.id)">📷 Escolher foto ou vídeo</button>
-          <button class="btn light" onclick="removeMedia(currentProduct.id)">Remover</button>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
-<input type="file" id="filePicker" accept="image/*,video/mp4,video/*" style="display:none">
-
 <footer>CATÁLOGO DE TÊNIS</footer>
 
 <script>
-const products = [
-  { id: "adidas-adizero-evo-sl", brand: "Adidas", name: "Adizero EVO SL", category: "Running", price: "R$ 1.099,99" },
-  { id: "adidas-adizero-sl-2", brand: "Adidas", name: "Adizero SL 2", category: "Running", price: "R$ 799,99" },
-  { id: "adidas-ultraboost", brand: "Adidas", name: "Ultraboost", category: "Running", price: "Consultar" },
-  { id: "adidas-supernova", brand: "Adidas", name: "Supernova", category: "Running", price: "Consultar" },
-  { id: "asics-novablast", brand: "ASICS", name: "Novablast", category: "Running", price: "Consultar" },
-  { id: "asics-gel-nimbus", brand: "ASICS", name: "Gel-Nimbus", category: "Running", price: "Consultar" },
-  { id: "asics-gel-kayano", brand: "ASICS", name: "Gel-Kayano", category: "Running", price: "Consultar" },
-  { id: "asics-gel-cumulus", brand: "ASICS", name: "Gel-Cumulus", category: "Running", price: "Consultar" },
-  { id: "nike-pegasus", brand: "Nike", name: "Pegasus", category: "Running", price: "Consultar" },
-  { id: "nike-vomero", brand: "Nike", name: "Vomero", category: "Running", price: "Consultar" },
-  { id: "nike-structure", brand: "Nike", name: "Structure", category: "Running", price: "Consultar" },
-  { id: "nike-air-max", brand: "Nike", name: "Air Max", category: "Lifestyle", price: "Consultar" },
-  { id: "nb-fresh-foam-1080", brand: "New Balance", name: "Fresh Foam 1080", category: "Running", price: "Consultar" },
-  { id: "nb-fresh-foam-880", brand: "New Balance", name: "Fresh Foam 880", category: "Running", price: "Consultar" },
-  { id: "nb-9060", brand: "New Balance", name: "9060", category: "Lifestyle", price: "Consultar" },
-  { id: "nb-574", brand: "New Balance", name: "574", category: "Lifestyle", price: "Consultar" }
-];
-
+let products = [];
 let currentBrand = "Todos";
-let currentProduct = null;
-let pickingId = null;
-const mediaCache = {};
 
-let db = null;
-function openDB() {
-  return new Promise(resolve => {
-    try {
-      const req = indexedDB.open("catalogo-tenis", 1);
-      req.onupgradeneeded = () => req.result.createObjectStore("media");
-      req.onsuccess = () => { db = req.result; resolve(); };
-      req.onerror = () => resolve();
-    } catch (e) { resolve(); }
-  });
-}
-function dbSave(id, file) {
-  return new Promise(resolve => {
-    if (!db) return resolve();
-    const tx = db.transaction("media", "readwrite");
-    tx.objectStore("media").put(file, id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => resolve();
-  });
-}
-function dbDelete(id) {
-  return new Promise(resolve => {
-    if (!db) return resolve();
-    const tx = db.transaction("media", "readwrite");
-    tx.objectStore("media").delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => resolve();
-  });
-}
-function dbLoadAll() {
-  return new Promise(resolve => {
-    if (!db) return resolve();
-    const tx = db.transaction("media", "readonly");
-    const req = tx.objectStore("media").openCursor();
-    req.onsuccess = () => {
-      const cursor = req.result;
-      if (cursor) { setMedia(cursor.key, cursor.value); cursor.continue(); }
-      else resolve();
-    };
-    req.onerror = () => resolve();
-  });
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
 }
 
-function setMedia(id, file) {
-  if (mediaCache[id]) URL.revokeObjectURL(mediaCache[id].url);
-  mediaCache[id] = {
-    url: URL.createObjectURL(file),
-    type: file.type.startsWith("video") ? "video" : "image"
-  };
-}
+function placeholder() { return el("span", "shoe-placeholder", "👟"); }
 
-function pickFile(id) {
-  pickingId = id;
-  document.getElementById("filePicker").click();
-}
-
-document.getElementById("filePicker").addEventListener("change", async function () {
-  const file = this.files[0];
-  if (!file || !pickingId) return;
-  setMedia(pickingId, file);
-  await dbSave(pickingId, file);
-  this.value = "";
-  renderProducts();
-  if (currentProduct && currentProduct.id === pickingId) openModal(currentProduct);
-});
-
-async function removeMedia(id) {
-  if (mediaCache[id]) URL.revokeObjectURL(mediaCache[id].url);
-  delete mediaCache[id];
-  await dbDelete(id);
-  renderProducts();
-  if (currentProduct) openModal(currentProduct);
-}
-
-function mediaHTML(id, big) {
-  const m = mediaCache[id];
-  if (!m) return null;
-  if (m.type === "video") {
-    return big
-      ? `<video src="${m.url}" controls playsinline></video>`
-      : `<video src="${m.url}" muted loop playsinline autoplay></video>`;
+function mediaElement(p, big) {
+  if (!p.media) return placeholder();
+  if (p.type === "video") {
+    const v = document.createElement("video");
+    v.src = p.media;
+    v.playsInline = true;
+    if (big) { v.controls = true; }
+    else { v.muted = true; v.loop = true; v.autoplay = true; }
+    v.onerror = () => v.replaceWith(placeholder());
+    return v;
   }
-  return `<img src="${m.url}" alt="">`;
+  const img = document.createElement("img");
+  img.src = p.media;
+  img.alt = p.brand + " " + p.name;
+  if (!big) img.loading = "lazy";
+  img.onerror = () => img.replaceWith(placeholder());
+  return img;
+}
+
+function renderBrands() {
+  const box = document.getElementById("brands");
+  box.innerHTML = "";
+  const brands = ["Todos"];
+  products.forEach(p => { if (!brands.includes(p.brand)) brands.push(p.brand); });
+  if (!brands.includes(currentBrand)) currentBrand = "Todos";
+  brands.forEach(b => {
+    const btn = el("button", "brand-btn" + (b === currentBrand ? " active" : ""), b);
+    btn.onclick = () => { currentBrand = b; renderBrands(); renderProducts(); };
+    box.appendChild(btn);
+  });
 }
 
 function renderProducts() {
@@ -232,50 +151,41 @@ function renderProducts() {
   if (filtered.length === 0) { noResults.style.display = "block"; return; }
   noResults.style.display = "none";
 
-  filtered.forEach(product => {
-    const card = document.createElement("div");
-    card.className = "product";
-    card.onclick = () => openModal(product);
-    const media = mediaHTML(product.id, false) || `<span class="shoe-placeholder">👟</span>`;
-    card.innerHTML = `
-      <div class="product-image">
-        <span class="brand-tag">${product.brand}</span>
-        ${media}
-        <button class="add-media" title="Escolher foto ou vídeo">📷</button>
-      </div>
-      <div class="product-info">
-        <div class="product-brand">${product.brand}</div>
-        <div class="product-name">${product.name}</div>
-        <div class="product-category">${product.category}</div>
-        <div class="product-price">${product.price}</div>
-      </div>`;
-    card.querySelector(".add-media").onclick = (e) => { e.stopPropagation(); pickFile(product.id); };
+  filtered.forEach(p => {
+    const card = el("div", "product");
+    card.onclick = () => openModal(p);
+
+    const imgBox = el("div", "product-image");
+    imgBox.appendChild(el("span", "brand-tag", p.brand));
+    imgBox.appendChild(mediaElement(p, false));
+
+    const info = el("div", "product-info");
+    info.appendChild(el("div", "product-brand", p.brand));
+    info.appendChild(el("div", "product-name", p.name));
+    info.appendChild(el("div", "product-category", p.category || ""));
+    info.appendChild(el("div", "product-price", p.price || "Consultar"));
+
+    card.appendChild(imgBox);
+    card.appendChild(info);
     container.appendChild(card);
   });
 }
 
-function filterBrand(brand, button) {
-  currentBrand = brand;
-  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-  button.classList.add("active");
-  renderProducts();
-}
-
-function openModal(product) {
-  currentProduct = product;
+function openModal(p) {
   document.getElementById("modal").style.display = "block";
-  document.getElementById("modalImage").innerHTML = mediaHTML(product.id, true) || "👟";
-  document.getElementById("modalBrand").textContent = product.brand;
-  document.getElementById("modalTitle").textContent = product.name;
-  document.getElementById("modalCategory").textContent = product.category;
-  document.getElementById("modalPrice").textContent = product.price;
-  document.getElementById("modalModel").textContent = product.name;
+  const box = document.getElementById("modalImage");
+  box.innerHTML = "";
+  box.appendChild(mediaElement(p, true));
+  document.getElementById("modalBrand").textContent = p.brand;
+  document.getElementById("modalTitle").textContent = p.name;
+  document.getElementById("modalCategory").textContent = p.category || "";
+  document.getElementById("modalPrice").textContent = p.price || "Consultar";
+  document.getElementById("modalModel").textContent = p.name;
 }
 
 function closeModal() {
   document.getElementById("modal").style.display = "none";
-  document.getElementById("modalImage").innerHTML = "👟";
-  currentProduct = null;
+  document.getElementById("modalImage").innerHTML = "";
 }
 
 document.getElementById("search").addEventListener("input", renderProducts);
@@ -283,11 +193,17 @@ document.getElementById("modal").addEventListener("click", function (e) {
   if (e.target === this) closeModal();
 });
 
-(async function start() {
-  await openDB();
-  await dbLoadAll();
-  renderProducts();
-})();
+fetch("produtos.json?v=" + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    products = data.produtos || [];
+    renderBrands();
+    renderProducts();
+  })
+  .catch(() => {
+    document.getElementById("noResults").textContent = "Não foi possível carregar o catálogo.";
+    document.getElementById("noResults").style.display = "block";
+  });
 </script>
 
 </body>
