@@ -36,6 +36,10 @@ input[type=file] { width: 100%; padding: 10px; border: 1px dashed #999; border-r
 .item-actions { display: flex; gap: 6px; flex-direction: column; }
 .hidden { display: none; }
 .link { color: #555; font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.chip { position: relative; width: 84px; height: 84px; border-radius: 10px; background: #e5e5e5; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+.chip img { width: 100%; height: 100%; object-fit: cover; }
+.chip button { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: none; border-radius: 50%; background: #c62828; color: #fff; font-size: 14px; cursor: pointer; line-height: 1; }
 </style>
 </head>
 <body>
@@ -45,7 +49,6 @@ input[type=file] { width: 100%; padding: 10px; border: 1px dashed #999; border-r
 
 <div class="wrap">
 
-  <!-- Conectar -->
   <div id="loginBox" class="card">
     <h2>1. Conectar ao GitHub</h2>
     <label for="token">Chave de acesso (token)</label>
@@ -54,7 +57,6 @@ input[type=file] { width: 100%; padding: 10px; border: 1px dashed #999; border-r
     <button class="btn" onclick="connect()">Conectar</button>
   </div>
 
-  <!-- Painel -->
   <div id="panel" class="hidden">
 
     <div class="card">
@@ -74,9 +76,15 @@ input[type=file] { width: 100%; padding: 10px; border: 1px dashed #999; border-r
       <label for="price">Preço</label>
       <input type="text" id="price" placeholder="Ex.: R$ 799,99 (ou deixe vazio para 'Consultar')">
 
-      <label for="file">Foto (JPG/PNG) ou vídeo (MP4)</label>
-      <input type="file" id="file" accept="image/*,video/mp4,video/*">
-      <p class="hint" id="fileHint">As fotos são reduzidas automaticamente para carregar rápido. Vídeos: até 25 MB.</p>
+      <div id="currentBox" class="hidden">
+        <label>Fotos e vídeos atuais</label>
+        <div id="chips" class="chips"></div>
+        <p class="hint">Toque no ✕ para remover um deles.</p>
+      </div>
+
+      <label for="file">Adicionar fotos (JPG/PNG) e vídeos (MP4)</label>
+      <input type="file" id="file" accept="image/*,video/mp4,video/*" multiple>
+      <p class="hint">Você pode escolher <b>vários arquivos de uma vez</b> (segure Ctrl e clique em cada um). As fotos são reduzidas automaticamente. Vídeos: até 25 MB cada.</p>
 
       <button class="btn" id="saveBtn" onclick="saveProduct()">Salvar tênis</button>
       <button class="btn light hidden" id="cancelBtn" onclick="resetForm()">Cancelar</button>
@@ -106,6 +114,8 @@ let token = "";
 try { token = localStorage.getItem("gh_token") || ""; } catch (e) {}
 let products = [];
 let editingId = null;
+let origMedia = [];   // midias que o tenis tinha ao abrir a edicao
+let curMedia = [];    // midias mantidas (as removidas saem daqui)
 
 /* ---------- Utilidades ---------- */
 function $(id) { return document.getElementById(id); }
@@ -124,6 +134,12 @@ function slug(t) {
 
 function toB64(str) { return btoa(unescape(encodeURIComponent(str))); }
 function fromB64(b64) { return decodeURIComponent(escape(atob(b64.replace(/\n/g, "")))); }
+
+function normMedia(p) {
+  if (Array.isArray(p.media)) return p.media.filter(m => m && m.src);
+  if (p.media) return [{ src: p.media, type: p.type || "image" }];
+  return [];
+}
 
 function blobToB64(blob) {
   return new Promise((resolve, reject) => {
@@ -195,11 +211,9 @@ async function ghDelete(path, message) {
 async function loadProducts() {
   const f = await ghGet("produtos.json");
   if (!f) { products = []; return; }
-  const data = JSON.parse(fromB64(f.content));
-  products = data.produtos || [];
+  products = JSON.parse(fromB64(f.content)).produtos || [];
 }
 
-/* Baixa a lista mais recente, aplica a mudança e salva (evita sobrescrever) */
 async function saveProducts(mutate, message) {
   const f = await ghGet("produtos.json");
   let list = f ? (JSON.parse(fromB64(f.content)).produtos || []) : [];
@@ -235,6 +249,29 @@ function logout() {
 }
 
 /* ---------- Tela ---------- */
+function renderChips() {
+  const box = $("chips");
+  box.innerHTML = "";
+  $("currentBox").classList.toggle("hidden", curMedia.length === 0);
+  curMedia.forEach((m, i) => {
+    const c = document.createElement("div");
+    c.className = "chip";
+    if (m.type === "video") c.textContent = "🎬";
+    else {
+      const img = document.createElement("img");
+      img.src = m.src;
+      img.onerror = () => { c.textContent = "🖼️"; };
+      c.appendChild(img);
+    }
+    const x = document.createElement("button");
+    x.textContent = "✕";
+    x.title = "Remover";
+    x.onclick = () => { curMedia.splice(i, 1); renderChips(); };
+    c.appendChild(x);
+    box.appendChild(c);
+  });
+}
+
 function renderAll() {
   const brands = [...new Set(products.map(p => p.brand))];
   const cats = [...new Set(products.map(p => p.category).filter(Boolean))];
@@ -245,15 +282,18 @@ function renderAll() {
   const list = $("list");
   list.innerHTML = "";
   products.forEach(p => {
+    const media = normMedia(p);
+    const cover = media.find(m => m.type !== "video") || media[0];
+
     const row = document.createElement("div");
     row.className = "item";
 
     const th = document.createElement("div");
     th.className = "thumb";
-    if (p.media && p.type === "video") th.textContent = "🎬";
-    else if (p.media) {
+    if (cover && cover.type === "video") th.textContent = "🎬";
+    else if (cover) {
       const img = document.createElement("img");
-      img.src = p.media;
+      img.src = cover.src;
       img.onerror = () => { th.textContent = "🖼️"; };
       th.appendChild(img);
     } else th.textContent = "👟";
@@ -261,7 +301,8 @@ function renderAll() {
     const tx = document.createElement("div");
     tx.className = "item-text";
     const b = document.createElement("b"); b.textContent = p.name;
-    const s = document.createElement("span"); s.textContent = p.brand + " · " + (p.price || "Consultar");
+    const s = document.createElement("span");
+    s.textContent = p.brand + " · " + (p.price || "Consultar") + (media.length ? " · " + media.length + " arquivo(s)" : "");
     tx.appendChild(b); tx.appendChild(s);
 
     const ac = document.createElement("div");
@@ -281,17 +322,21 @@ function renderAll() {
 
 function resetForm() {
   editingId = null;
+  origMedia = [];
+  curMedia = [];
   $("formTitle").textContent = "Adicionar tênis";
   $("saveBtn").textContent = "Salvar tênis";
   $("cancelBtn").classList.add("hidden");
   ["brand", "name", "category", "price", "file"].forEach(i => $(i).value = "");
-  $("fileHint").textContent = "As fotos são reduzidas automaticamente para carregar rápido. Vídeos: até 25 MB.";
+  renderChips();
 }
 
 function startEdit(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   editingId = id;
+  origMedia = normMedia(p);
+  curMedia = origMedia.slice();
   $("formTitle").textContent = "Editando: " + p.name;
   $("saveBtn").textContent = "Salvar alterações";
   $("cancelBtn").classList.remove("hidden");
@@ -300,7 +345,7 @@ function startEdit(id) {
   $("category").value = p.category || "";
   $("price").value = p.price === "Consultar" ? "" : (p.price || "");
   $("file").value = "";
-  $("fileHint").textContent = "Deixe vazio para manter a foto/vídeo atual.";
+  renderChips();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -310,23 +355,20 @@ async function saveProduct() {
   const name = $("name").value.trim();
   const category = $("category").value.trim() || "Running";
   const price = $("price").value.trim() || "Consultar";
-  const file = $("file").files[0];
+  const files = Array.from($("file").files);
 
   if (!brand || !name) { status("Preencha a marca e o modelo.", "err"); return; }
 
   $("saveBtn").disabled = true;
   try {
-    const old = editingId ? products.find(p => p.id === editingId) : null;
-    let media = old ? old.media : "";
-    let type = old ? old.type : "";
-    let oldMedia = null;
-
-    if (file) {
-      status("Enviando arquivo...", "wait");
+    const added = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      status("Enviando arquivo " + (i + 1) + " de " + files.length + "...", "wait");
       const isVideo = file.type.startsWith("video");
       let b64, ext;
       if (isVideo) {
-        if (file.size > MAX_VIDEO_MB * 1024 * 1024) throw new Error("O vídeo tem mais de " + MAX_VIDEO_MB + " MB. Use um vídeo menor.");
+        if (file.size > MAX_VIDEO_MB * 1024 * 1024) throw new Error("O vídeo \"" + file.name + "\" tem mais de " + MAX_VIDEO_MB + " MB.");
         b64 = await blobToB64(file);
         ext = "mp4";
       } else {
@@ -334,16 +376,16 @@ async function saveProduct() {
         b64 = await blobToB64(blob);
         ext = "jpg";
       }
-      const path = "fotos/" + slug(brand + "-" + name) + "-" + Date.now().toString(36) + "." + ext;
+      const path = "fotos/" + slug(brand + "-" + name) + "-" + Date.now().toString(36) + i + "." + ext;
       await ghPut(path, b64, "Adiciona midia: " + name);
-      oldMedia = old && old.media ? old.media : null;
-      media = path;
-      type = isVideo ? "video" : "image";
+      added.push({ src: path, type: isVideo ? "video" : "image" });
     }
 
     status("Salvando no catálogo...", "wait");
     const id = editingId || (slug(brand + "-" + name) + "-" + Date.now().toString(36));
-    const item = { id, brand, name, category, price, media, type };
+    const finalMedia = curMedia.concat(added);
+    const removed = origMedia.filter(o => !curMedia.some(c => c.src === o.src));
+    const item = { id, brand, name, category, price, media: finalMedia };
 
     await saveProducts(list => {
       const i = list.findIndex(p => p.id === id);
@@ -351,7 +393,7 @@ async function saveProduct() {
       return list;
     }, (editingId ? "Atualiza: " : "Adiciona: ") + name);
 
-    if (oldMedia) { try { await ghDelete(oldMedia, "Remove midia antiga"); } catch (e) {} }
+    for (const r of removed) { try { await ghDelete(r.src, "Remove midia"); } catch (e) {} }
 
     resetForm();
     renderAll();
@@ -368,8 +410,9 @@ async function deleteProduct(id) {
   if (!confirm("Apagar \"" + p.name + "\" do catálogo?")) return;
   status("Apagando...", "wait");
   try {
+    const media = normMedia(p);
     await saveProducts(list => list.filter(x => x.id !== id), "Remove: " + p.name);
-    if (p.media) { try { await ghDelete(p.media, "Remove midia"); } catch (e) {} }
+    for (const m of media) { try { await ghDelete(m.src, "Remove midia"); } catch (e) {} }
     if (editingId === id) resetForm();
     renderAll();
     status("Apagado ✅", "ok");

@@ -23,6 +23,7 @@ header p { margin-top: 8px; color: #bbb; }
 .product-image img, .product-image video { width: 100%; height: 100%; object-fit: cover; }
 .shoe-placeholder { font-size: 70px; }
 .brand-tag { position: absolute; top: 12px; left: 12px; background: #111; color: #fff; padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; }
+.count-tag { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,.65); color: #fff; padding: 5px 9px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; }
 .product-info { padding: 17px; }
 .product-brand { color: #777; font-size: 12px; text-transform: uppercase; margin-bottom: 6px; }
 .product-name { font-size: 18px; font-weight: bold; }
@@ -32,9 +33,15 @@ header p { margin-top: 8px; color: #bbb; }
 .modal-box { background: #fff; max-width: 850px; margin: 30px auto; border-radius: 20px; overflow: hidden; position: relative; }
 .close { position: absolute; right: 18px; top: 14px; width: 40px; height: 40px; border: none; border-radius: 50%; background: #111; color: #fff; font-size: 22px; cursor: pointer; z-index: 5; }
 .modal-content { display: grid; grid-template-columns: 1fr 1fr; }
-.modal-image { min-height: 430px; background: linear-gradient(135deg, #eee, #d7d7d7); display: flex; align-items: center; justify-content: center; }
+.modal-left { display: flex; flex-direction: column; background: linear-gradient(135deg, #eee, #d7d7d7); }
+.modal-image { flex: 1; min-height: 380px; display: flex; align-items: center; justify-content: center; }
 .modal-image img, .modal-image video { width: 100%; height: 100%; max-height: 520px; object-fit: contain; }
 .modal-image .shoe-placeholder { font-size: 120px; }
+.thumbs { display: flex; gap: 8px; padding: 10px; overflow-x: auto; background: #fff; }
+.thumbs:empty { display: none; }
+.thumb { width: 64px; height: 64px; flex-shrink: 0; border: 2px solid transparent; border-radius: 10px; overflow: hidden; background: #e5e5e5; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; padding: 0; }
+.thumb.active { border-color: #111; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
 .modal-info { padding: 45px 35px; }
 .modal-brand { color: #777; text-transform: uppercase; font-size: 13px; margin-bottom: 10px; }
 .modal-title { font-size: 34px; margin-bottom: 15px; }
@@ -76,7 +83,10 @@ footer { text-align: center; padding: 40px 20px; color: #777; }
   <div class="modal-box">
     <button class="close" onclick="closeModal()">×</button>
     <div class="modal-content">
-      <div id="modalImage" class="modal-image"></div>
+      <div class="modal-left">
+        <div id="modalImage" class="modal-image"></div>
+        <div id="modalThumbs" class="thumbs"></div>
+      </div>
       <div class="modal-info">
         <div id="modalBrand" class="modal-brand"></div>
         <h2 id="modalTitle" class="modal-title"></h2>
@@ -104,11 +114,18 @@ function el(tag, cls, text) {
 
 function placeholder() { return el("span", "shoe-placeholder", "👟"); }
 
-function mediaElement(p, big) {
-  if (!p.media) return placeholder();
-  if (p.type === "video") {
+/* Aceita o formato antigo (media = texto) e o novo (media = lista) */
+function normMedia(p) {
+  if (Array.isArray(p.media)) return p.media.filter(m => m && m.src);
+  if (p.media) return [{ src: p.media, type: p.type || "image" }];
+  return [];
+}
+
+function mediaElement(m, big) {
+  if (!m) return placeholder();
+  if (m.type === "video") {
     const v = document.createElement("video");
-    v.src = p.media;
+    v.src = m.src;
     v.playsInline = true;
     if (big) { v.controls = true; }
     else { v.muted = true; v.loop = true; v.autoplay = true; }
@@ -116,8 +133,8 @@ function mediaElement(p, big) {
     return v;
   }
   const img = document.createElement("img");
-  img.src = p.media;
-  img.alt = p.brand + " " + p.name;
+  img.src = m.src;
+  img.alt = "";
   if (!big) img.loading = "lazy";
   img.onerror = () => img.replaceWith(placeholder());
   return img;
@@ -152,12 +169,16 @@ function renderProducts() {
   noResults.style.display = "none";
 
   filtered.forEach(p => {
+    const list = normMedia(p);
+    const cover = list.find(m => m.type !== "video") || list[0];
+
     const card = el("div", "product");
     card.onclick = () => openModal(p);
 
     const imgBox = el("div", "product-image");
     imgBox.appendChild(el("span", "brand-tag", p.brand));
-    imgBox.appendChild(mediaElement(p, false));
+    imgBox.appendChild(mediaElement(cover, false));
+    if (list.length > 1) imgBox.appendChild(el("span", "count-tag", "1/" + list.length));
 
     const info = el("div", "product-info");
     info.appendChild(el("div", "product-brand", p.brand));
@@ -171,11 +192,38 @@ function renderProducts() {
   });
 }
 
-function openModal(p) {
-  document.getElementById("modal").style.display = "block";
+function showMedia(list, index) {
   const box = document.getElementById("modalImage");
   box.innerHTML = "";
-  box.appendChild(mediaElement(p, true));
+  box.appendChild(mediaElement(list[index], true));
+  document.querySelectorAll("#modalThumbs .thumb").forEach((t, i) => {
+    t.classList.toggle("active", i === index);
+  });
+}
+
+function openModal(p) {
+  document.getElementById("modal").style.display = "block";
+  const list = normMedia(p);
+  const thumbs = document.getElementById("modalThumbs");
+  thumbs.innerHTML = "";
+
+  if (list.length > 1) {
+    list.forEach((m, i) => {
+      const t = el("button", "thumb");
+      if (m.type === "video") t.textContent = "🎬";
+      else {
+        const im = document.createElement("img");
+        im.src = m.src;
+        t.appendChild(im);
+      }
+      t.onclick = () => showMedia(list, i);
+      thumbs.appendChild(t);
+    });
+  }
+
+  if (list.length) showMedia(list, 0);
+  else document.getElementById("modalImage").replaceChildren(placeholder());
+
   document.getElementById("modalBrand").textContent = p.brand;
   document.getElementById("modalTitle").textContent = p.name;
   document.getElementById("modalCategory").textContent = p.category || "";
@@ -186,6 +234,7 @@ function openModal(p) {
 function closeModal() {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modalImage").innerHTML = "";
+  document.getElementById("modalThumbs").innerHTML = "";
 }
 
 document.getElementById("search").addEventListener("input", renderProducts);
