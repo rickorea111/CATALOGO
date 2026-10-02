@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "nike-vomero",
-      "brand": "Nike",
-      "name": "Vomero",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "nb-fresh-foam-1080",
       "brand": "New Balance",
       "name": "Fresh Foam 1080",
