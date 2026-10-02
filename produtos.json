@@ -1,15 +1,6 @@
 {
   "produtos": [
     {
-      "id": "nike-pegasus",
-      "brand": "Nike",
-      "name": "Pegasus",
-      "category": "Running",
-      "price": "Consultar",
-      "media": "",
-      "type": ""
-    },
-    {
       "id": "nike-vomero",
       "brand": "Nike",
       "name": "Vomero",
