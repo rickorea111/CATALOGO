@@ -1,3 +1,37 @@
 {
-  "produtos": []
+  "produtos": [
+    {
+      "id": "pplindy-dd-musbz1kd",
+      "brand": "pplindy",
+      "name": "dd",
+      "category": "ddd",
+      "price": "124",
+      "media": [
+        {
+          "src": "fotos/pplindy-dd-musbyqap0.mp4",
+          "type": "video"
+        },
+        {
+          "src": "fotos/pplindy-dd-musbyso91.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/pplindy-dd-musbyubd2.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/pplindy-dd-musbyvn73.mp4",
+          "type": "video"
+        },
+        {
+          "src": "fotos/pplindy-dd-musbyz604.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/pplindy-dd-musbz0fo5.jpg",
+          "type": "image"
+        }
+      ]
+    }
+  ]
 }
