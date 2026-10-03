@@ -32,6 +32,23 @@
           "type": "image"
         }
       ]
+    },
+    {
+      "id": "pplindy-wwdwdwdwd-muscrovy",
+      "brand": "pplindy",
+      "name": "wwdwdwdwd",
+      "category": "wdddwd",
+      "price": "100",
+      "media": [
+        {
+          "src": "fotos/pplindy-wwdwdwdwd-muscrmal0.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/pplindy-wwdwdwdwd-muscrnoy1.jpg",
+          "type": "image"
+        }
+      ]
     }
   ]
 }
