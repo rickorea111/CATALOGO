@@ -1,26 +1,3 @@
 {
-  "produtos": [
-    {
-      "id": "on-cloud-top2-muqwl7gj",
-      "brand": "ON CLOUD",
-      "name": "TOP2",
-      "category": "Running",
-      "price": "150.00",
-      "media": "fotos/on-cloud-top2-muqwl47x.mp4",
-      "type": "video"
-    },
-    {
-      "id": "nike-air-force-muqxkd0o",
-      "brand": "NIKE",
-      "name": "AIR FORCE",
-      "category": "Running",
-      "price": "120",
-      "media": [
-        {
-          "src": "fotos/nike-air-force-muqxkbmm0.jpg",
-          "type": "image"
-        }
-      ]
-    }
-  ]
+  "produtos": []
 }
