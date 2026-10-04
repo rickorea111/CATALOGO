@@ -1,53 +1,23 @@
 {
   "produtos": [
     {
-      "id": "pplindy-dd-musbz1kd",
-      "brand": "pplindy",
-      "name": "dd",
-      "category": "ddd",
-      "price": "124",
+      "brand": "Nike",
+      "name": "Air Max 90",
+      "category": "Casual",
+      "price": "R$ 599,90",
       "media": [
-        {
-          "src": "fotos/pplindy-dd-musbyqap0.mp4",
-          "type": "video"
-        },
-        {
-          "src": "fotos/pplindy-dd-musbyso91.jpg",
-          "type": "image"
-        },
-        {
-          "src": "fotos/pplindy-dd-musbyubd2.jpg",
-          "type": "image"
-        },
-        {
-          "src": "fotos/pplindy-dd-musbyvn73.mp4",
-          "type": "video"
-        },
-        {
-          "src": "fotos/pplindy-dd-musbyz604.jpg",
-          "type": "image"
-        },
-        {
-          "src": "fotos/pplindy-dd-musbz0fo5.jpg",
-          "type": "image"
-        }
+        { "src": "fotos/airmax1.jpg", "type": "image" },
+        { "src": "fotos/airmax2.jpg", "type": "image" },
+        { "src": "videos/airmax.mp4", "type": "video" }
       ]
     },
     {
-      "id": "pplindy-wwdwdwdwd-muscrovy",
-      "brand": "pplindy",
-      "name": "wwdwdwdwd",
-      "category": "wdddwd",
-      "price": "100",
+      "brand": "Adidas",
+      "name": "Superstar",
+      "category": "Esportivo",
+      "price": "R$ 449,90",
       "media": [
-        {
-          "src": "fotos/pplindy-wwdwdwdwd-muscrmal0.jpg",
-          "type": "image"
-        },
-        {
-          "src": "fotos/pplindy-wwdwdwdwd-muscrnoy1.jpg",
-          "type": "image"
-        }
+        { "src": "fotos/superstar.jpg", "type": "image" }
       ]
     }
   ]
