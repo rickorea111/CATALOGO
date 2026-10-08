@@ -1,17 +1,3 @@
 {
-  "produtos": [
-    {
-      "id": "nike-ddd-muy0va9t",
-      "brand": "Nike",
-      "name": "DDD",
-      "category": "Casual",
-      "price": "DD",
-      "media": [
-        {
-          "src": "fotos/nike-ddd-muy0v97b0.jpg",
-          "type": "image"
-        }
-      ]
-    }
-  ]
+  "produtos": []
 }
