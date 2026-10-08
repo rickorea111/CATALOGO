@@ -1,3 +1,45 @@
 {
-  "produtos": []
+  "produtos": [
+    {
+      "id": "dds-dsf-muzn35fk",
+      "brand": "DDS",
+      "name": "DSF",
+      "category": "BHEF",
+      "price": "FFRF",
+      "media": [
+        {
+          "src": "fotos/dds-dsf-muzn2iy30.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn2lkz1.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn2ojq2.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn2rie3.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn2u3h4.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn2x895.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn307z6.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/dds-dsf-muzn33az7.jpg",
+          "type": "image"
+        }
+      ]
+    }
+  ]
 }
