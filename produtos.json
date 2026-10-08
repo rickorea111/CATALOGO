@@ -1,17 +1,3 @@
 {
-  "produtos": [
-    {
-      "id": "hj-jhbjh-muzmv4hs",
-      "brand": "HJ",
-      "name": "JHBJH",
-      "category": "BH",
-      "price": "19,00",
-      "media": [
-        {
-          "src": "fotos/hj-jhbjh-muzmv35v0.jpg",
-          "type": "image"
-        }
-      ]
-    }
-  ]
+  "produtos": []
 }
