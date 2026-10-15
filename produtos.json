@@ -40,6 +40,51 @@
           "type": "image"
         }
       ]
+    },
+    {
+      "id": "puma-puma-dark-mv9t65lt",
+      "brand": "PUMA",
+      "name": "PUMA DARK",
+      "category": "Running",
+      "price": "120.00",
+      "media": [
+        {
+          "src": "fotos/puma-puma-dark-mv9t5mhi0.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5onr1.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5qy62.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5suu3.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5uvy4.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5x3v5.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t5zce6.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t61bx7.jpg",
+          "type": "image"
+        },
+        {
+          "src": "fotos/puma-puma-dark-mv9t63128.mp4",
+          "type": "video"
+        }
+      ]
     }
   ]
 }
